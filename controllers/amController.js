@@ -1,5 +1,4 @@
-const io = require('socket.io');
-const sendEmail = require('../utils/email');
+const io = require('./../server')
 
 const app = require('./../app');
 const Form = require('../models/formModels');
@@ -16,10 +15,7 @@ exports.sendForm = catchAsync(async (req, res) => {
     subject: req.body.subject,
     body: req.body.body,
   });
-
-  // io.on('form', (socket) => {
-  //   socket.emit('newFeedback', form);
-  // });
+   io.emit('newFeedback', form);  
 
   res.status(200).json({
     status: 'success',
@@ -43,11 +39,7 @@ exports.readForms = catchAsync(async (req, res) => {
       new ErrorResponse('you do not have any feedback submitted yet')
     );
   }
-
-  //   io.on('connection', (socket) => {
-  //     // send a message to the client
-  //     socket.emit('user', allForms);
-  //   });
+     io.emit('user', allForms);  
 
   res.status(200).json({
     status: 'success',
@@ -69,9 +61,8 @@ exports.respondToForm = catchAsync(async (req, res, next) => {
   if (!response) {
     return next(new ErrorResponse('no tour found with such id', 404));
   }
-  // io.Socket.on('response', function (response) {
-  //   io.Socket.emit('agentResponse', response);
-  // });
+  // io.emit('agentResponse', response);
+
   res.status(201).json({
     status: 'sucess',
     data: {

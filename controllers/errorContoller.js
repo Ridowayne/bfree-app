@@ -40,6 +40,7 @@ const sendErrorProd = (err, res) => {
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: err.status,
+      error: err,
       message: err.message,
     });
     // programming or other unknown error: want to leak details to the client
@@ -47,9 +48,11 @@ const sendErrorProd = (err, res) => {
     // log it to the console
     console.error('ERROR 💥', err);
     //send response
-    res.status(500).json({
+    res.status(err.statusCode).json({
+      error: err,
       status: 'fail',
-      message: 'Something went wrong!',
+      explanation: 'Something went wrong!',
+      message: err.message,
     });
   }
 };

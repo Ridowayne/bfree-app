@@ -15,6 +15,8 @@ io.of('/api/socket').on('connection', (socket) => {
   });
 });
 
+module.exports = io;
+
 //start the server
 const port = process.env.PORT || 8080;
 server.listen(port, () => console.log(`Server now running on port ${port}!`));

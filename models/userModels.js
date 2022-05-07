@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
   },
   designation: {
     type: String,
-    enum: ['AM', 'Team Lead', 'IT', 'Engineering', 'Management', 'Admin'],
+    enum: ['AM', 'Operations & TL', 'IT', 'Engineering',  'Admin'],
     required: [true, 'please provide your role'],
   },
   email: {
@@ -41,6 +41,10 @@ const userSchema = new mongoose.Schema({
         return el === this.password;
       },
       message: 'Passwords are not the same!',
+    },
+    signupDate: {
+      required: true,
+      default: Date.now
     },
   },
   active: {

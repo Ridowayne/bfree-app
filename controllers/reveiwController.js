@@ -1,4 +1,4 @@
-const io = require('socket.io');
+const io = require('./../server')
 
 const Review = require('../models/reviewModels');
 const catchAsync = require('../utils/catchAsync');
@@ -8,6 +8,14 @@ const app = require('../app');
 // contoller for am post and get specific
 // controller for receiver get related to him
 // contoller for admin get all
+
+exports.setFormUserIds = (req, res, next) => {
+  // Allow nested routes
+  if (!req.body.tour) req.body.form = req.params.formId;
+  if (!req.body.user) req.body.user = req.user.id;
+  next();
+};
+
 
 exports.writeReview = catchAsync(async (req, res) => {
   const review = await Review.create({
@@ -67,8 +75,10 @@ exports.statsOfReview = catchAsync(async (req, res) => {
       },
     },
   ]);
+
   reviewStatistics.length; // 4
   reviewStatistics.sort((d1, d2) => d1._id - d2._id);
+  io.emit('reviewstats', reviewStatistics);
   res.status(200).json({
     status: 'success',
     data: {

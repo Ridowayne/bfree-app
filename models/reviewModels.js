@@ -22,6 +22,12 @@ const ratingSchema = new mongoose.Schema(
     form: {
       type: mongoose.Schema.ObjectId,
       ref: 'Form',
+      required: [true, 'Review must belong to a tour.']
+    },
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+      required: [true, 'Review must belong to a user']
     },
   },
   {

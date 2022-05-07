@@ -14,7 +14,7 @@ const formSchema = new mongoose.Schema(
     },
     to: {
       type: String,
-      enum: ['Engineering', 'HR', 'Operations & TL', 'IT', 'Management'],
+      enum: ['Engineering', 'HR', 'Operations & TL', 'IT',],
       required: [true, 'Kindly fill who to direct your feedback to'],
     },
     subject: {

@@ -7,9 +7,10 @@ const { restrictTo } = require('../controllers/authController');
 
 app.use(restrictTo('Engineering'));
 
+app.get('/', engineeringContoller.allunansweredtickets);
+
 router.get('/answered', engineeringContoller.allansweredtickets);
 
-app.get('/', engineeringContoller.allunansweredtickets);
 app
   .route('/:id')
   .get(engineeringContoller.readForm)

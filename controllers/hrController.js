@@ -1,20 +1,24 @@
 // enum: ['AM', 'Team Lead', 'IT', 'Engineering', 'Management'],
+const io = require('./../server')
+
 const Form = require('../models/formModels');
 const catchAsync = require('../utils/catchAsync');
 const ErrorResponse = require('../utils/catchAsync');
 
 //Team leads(get att tickects, get a ticket, respond to tickeds)
 exports.hrAll = catchAsync(async (req, res, next) => {
-  const teamLeadIssues = await Form.find({ to: 'HR' })
+  const hrIssues = await Form.find({ to: 'HR' })
     .select(['-__v'])
     .populate('ratings')
     .sort({ datesubmited: -1 });
 
+  io.emit('newFeedback', hrIssues);
+
   res.status(200).json({
     status: 'success',
-    results: teamLeadIssues.length,
+    results: hrIssues.length,
     data: {
-      teamLeadIssues,
+      hrIssues,
     },
   });
 });
@@ -25,6 +29,8 @@ exports.allansweredtickets = catchAsync(async (req, res, next) => {
     .select(['-__v'])
     .populate('ratings')
     .sort({ datesubmited: -1 });
+
+  io.emit('newFeedback', answeredTickets);
 
   res.status(200).json({
     status: 'success',
@@ -44,6 +50,8 @@ exports.allunansweredtickets = catchAsync(async (req, res, next) => {
     .select(['-__v'])
     .populate('ratings')
     .sort({ datesubmited: -1 });
+
+  io.emit('newFeedback', unAnsweredTickets);
 
   res.status(200).json({
     status: 'success',
@@ -87,6 +95,8 @@ exports.respondToForm = catchAsync(async (req, res, next) => {
   if (!response) {
     return next(new ErrorResponse('no tour found with such id', 404));
   }
+
+  io.emit('response', response);
 
   res.status(201).json({
     status: 'sucess',

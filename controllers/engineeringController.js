@@ -1,20 +1,24 @@
 // enum: ['AM', 'Team Lead', 'IT', 'Engineering', 'Management'],
+const io = require('./../server')
+
 const Form = require('../models/formModels');
 const catchAsync = require('../utils/catchAsync');
 const ErrorResponse = require('../utils/catchAsync');
 
 // getting engineering issues
 exports.engineeringAll = catchAsync(async (req, res, next) => {
-  const teamLeadIssues = await Form.find({ to: 'Engineering' })
+  const engineeringIssues = await Form.find({ to: 'Engineering' })
     .select(['-__v'])
     .populate('ratings')
     .sort({ datesubmited: -1 });
 
+  io.emit('engineIssues', engineeringIssues);
+
   res.status(200).json({
     status: 'success',
-    results: teamLeadIssues.length,
+    results: engineeringIssues.length,
     data: {
-      teamLeadIssues,
+      engineeringIssues,
     },
   });
 });
@@ -28,6 +32,8 @@ exports.allansweredtickets = catchAsync(async (req, res, next) => {
     .select(['-__v'])
     .populate('ratings')
     .sort({ datesubmited: -1 });
+
+  io.emit('newFeedback', answeredTickets);
 
   res.status(200).json({
     status: 'success',
@@ -47,6 +53,8 @@ exports.allunansweredtickets = catchAsync(async (req, res, next) => {
     .select(['-__v'])
     .populate('ratings')
     .sort({ datesubmited: -1 });
+
+  io.emit('newFeedback', unAnsweredTickets);
 
   res.status(200).json({
     status: 'success',

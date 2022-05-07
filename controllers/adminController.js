@@ -1,3 +1,5 @@
+const io = require('./../server')
+
 const Form = require('../models/formModels');
 const Review = require('../models/reviewModels');
 const ErrorResponse = require('../utils/appError');
@@ -9,6 +11,8 @@ exports.getAllFeedbacks = catchAsync(async (req, res, next) => {
     .populate('ratings')
     .sort({ datesubmited: -1 })
     .limit(15);
+
+  io.emit('newFeedback', feedbacks);
 
   res.status(200).json({
     status: 'success',
@@ -45,6 +49,8 @@ exports.answeredTickets = catchAsync(async (req, res, next) => {
     return next(new ErrorResponse('There are no resolved tickets', 404));
   }
 
+  io.emit('newFeedback', done);
+
   res.status(200).json({
     status: 'success',
     results: done.length,
@@ -64,6 +70,8 @@ exports.unansweredTickets = catchAsync(async (req, res, next) => {
     return next(new ErrorResponse('There are no unresolved tickets', 404));
   }
 
+  io.emit('newFeedback', undone);
+
   res.status(200).json({
     status: 'success',
     results: undone.length,
@@ -75,6 +83,8 @@ exports.unansweredTickets = catchAsync(async (req, res, next) => {
 
 exports.getreveiews = catchAsync(async (req, res, next) => {
   const reviews = await Review.find();
+
+  io.emit('newreview', reviews);
 
   res.status(200).json({
     status: 'success',

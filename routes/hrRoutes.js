@@ -4,9 +4,12 @@ const router = express.Router();
 
 const hrContoller = require('../controllers/hrController');
 
-app.route('/:id').get(hrContoller.readForm).patch(hrContoller.respondToForm);
+app.route('/').get(hrContoller.allunansweredtickets);
+
 router.get('/answered', hrContoller.allansweredtickets);
 
-app.route('/').get(hrContoller.allunansweredtickets);
+app.route('/:id').get(hrContoller.readForm).patch(hrContoller.respondToForm);
+
+
 
 module.exports = app;

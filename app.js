@@ -56,25 +56,26 @@ app.use(mongoSanitize());
 app.use(xss());
 
 // Prevent parameter pollution
-// app.use(
-//   hpp({
-//     whitelist: [
-//
-//     ]
-//   })
-// );
+app.use(
+  hpp({
+    whitelist: [
+      'ratings',
+      'forms'
+    ]
+  })
+);
 
 // routes
 // app.route('/').get(function (req, res) {
 //   res.sendFile(process.cwd() + '/index.html');
 // });
 app.get('/', (req, res) => {
-  res.send('welcome to bfree feedback app, YOLO');
+  res.send('welcome to bfree feedback app, BEA');
 });
 
 app.use('/api/v1/agents/forms', protect, restrictTo('AM', 'Admin'), amRoutes);
 app.use('/api/v1/users', userRoutes);
-app.use('/api/v1/admin', protect, restrictTo('admin', 'Admin'), adminRoutes);
+app.use('/api/v1/admin', protect, restrictTo( 'Admin'), adminRoutes);
 app.use(
   '/api/v1/engineering',
   protect,
@@ -83,13 +84,13 @@ app.use(
 );
 app.use('/api/v1/hr', protect, restrictTo('HR', 'Admin'), hrRoutes);
 app.use('/api/v1/IT', protect, restrictTo('IT', 'Admin'), iTRoutes);
-app.use(
-  '/api/v1/management',
-  protect,
-  restrictTo('Management'),
-  managementRoutes
-);
-app.use('/api/v1/teamLead', protect, restrictTo('Team Lead'), teamLeadRoutes);
+// app.use(
+//   '/api/v1/management',
+//   protect,
+//   restrictTo('Management'),
+//   managementRoutes
+// );
+app.use('/api/v1/operations', protect, restrictTo('Operations & TL'), teamLeadRoutes);
 app.use('/api/v1/reviews', protect, reviewRoutes);
 // this is for any unhandled routes requested for
 app.all('*', (req, res, next) => {
